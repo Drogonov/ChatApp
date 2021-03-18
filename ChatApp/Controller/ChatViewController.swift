@@ -64,6 +64,7 @@ class ChatViewController: UIViewController {
         navigationItem.title = "Chat App"
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage().systemImage(withSystemName: "list.bullet"), style: .plain, target: self, action: #selector(showMenu))
+        
     }
     
     private func configureSwipeGesture() {

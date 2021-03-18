@@ -11,6 +11,7 @@ import Firebase
 protocol MenuViewControllerDelegate: class {
     func handleChatToggle()
     func handleLogout()
+    func userProfileEdited()
 }
 
 class MenuViewController: UIViewController {
@@ -27,6 +28,7 @@ class MenuViewController: UIViewController {
     
     weak var delegate: MenuViewControllerDelegate?
     private lazy var tableView = MenuTableView(frame: .zero, user: user)
+    private lazy var settingsVC = SettingsViewController(user: user)
     
     // MARK: - Lifecycle
     
@@ -62,6 +64,8 @@ class MenuViewController: UIViewController {
         configureSwipeGesture()
         configureNavigationBar()
         configureTableView()
+        
+        settingsVC.delegate = self
     }
     
     private func configureNavigationBar() {
@@ -81,7 +85,6 @@ class MenuViewController: UIViewController {
                          bottom: view.safeAreaLayoutGuide.bottomAnchor,
                          right: view.safeAreaLayoutGuide.rightAnchor,
                          paddingRight: 80)
-        tableView.set(withUser: user)
     }
     
     private func configureSwipeGesture() {
@@ -92,7 +95,7 @@ class MenuViewController: UIViewController {
     
     func presentSettingsVC() {
         DispatchQueue.main.async {
-            let nav = UINavigationController(rootViewController: SettingsViewController(user: self.user))
+            let nav = UINavigationController(rootViewController: self.settingsVC)
             if #available(iOS 13.0, *) {
                 nav.isModalInPresentation = true
             }
@@ -109,7 +112,12 @@ extension MenuViewController: MenuTableViewDelegate {
     }
     
     func handleLogoutToggle() {
-//        self.dismiss(animated: true, completion: nil)
         delegate?.handleLogout()
+    }
+}
+
+extension MenuViewController: SettingsViewControllerDelegate {
+    func userProfileEdited() {
+        delegate?.userProfileEdited()
     }
 }

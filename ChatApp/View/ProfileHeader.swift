@@ -14,16 +14,19 @@ class ProfileHeader: UIView {
     
     private var profileImageView: WebImageView = {
         let iv = WebImageView()
-//        iv.image = UIImage(named: "Clogo")
+        //        iv.image = UIImage(named: "Clogo")
         iv.contentMode = .scaleAspectFill
         iv.clipsToBounds = true
         iv.backgroundColor = .systemBackground
+        iv.layer.borderColor = UIColor.label.cgColor
+        iv.layer.borderWidth = 2
         return iv
     }()
     
     private var initialsLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 36)
+        label.text = ""
         label.textAlignment = .center
         return label
     }()
@@ -31,6 +34,7 @@ class ProfileHeader: UIView {
     private var userNameLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 18)
+        label.text = ""
         label.numberOfLines = 0
         label.textAlignment = .center
         return label
@@ -73,6 +77,7 @@ class ProfileHeader: UIView {
                              paddingTop: 12,
                              paddingLeft: 12,
                              paddingRight: 12)
+        
     }
     
     func configureProfileHeader(withUid uid: String, withUserName userName: String?, withInitials initials: String, withImageUrl imageUrl: String?) {
@@ -91,7 +96,5 @@ class ProfileHeader: UIView {
         } else {
             initialsLabel.text = initials
         }
-        
     }
-    
 }

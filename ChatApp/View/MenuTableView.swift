@@ -26,12 +26,13 @@ protocol MenuTableViewDelegate: class {
 
 class MenuTableView: UIView {
     
-    private var user: User
     weak var delegate: MenuTableViewDelegate?
     
     private let defaultCell = "DefaultCell"
-    private lazy var tableView = UITableView(frame: .zero, style: .plain)
-    private lazy var profileHeader = ProfileHeader()
+    
+    private var user: User
+    private var tableView = UITableView(frame: .zero, style: .plain)
+    private var profileHeader = ProfileHeader()
         
     init(frame: CGRect, user: User) {
         self.user = user
@@ -72,17 +73,12 @@ class MenuTableView: UIView {
     }
     
     func configureHeader() {
-//        tableView.tableHeaderView = profileHeader
         profileHeader.configureProfileHeader(withUid: user.uid,
                                              withUserName: user.fullname,
                                              withInitials: user.initialForProfileImage,
                                              withImageUrl: user.profileImageUrl)
     }
     
-    func set(withUser user: User) {
-        self.user = user
-        configureUI()
-    }
 }
 
 extension MenuTableView: UITableViewDelegate, UITableViewDataSource {

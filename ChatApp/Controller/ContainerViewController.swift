@@ -22,8 +22,9 @@ class ContainerViewController: UIViewController {
     var user: User? {
         didSet {
             guard let user = user else { return }
-            configureHomeController(withUser: user)
             configureMenuController(withUser: user)
+            configureHomeController(withUser: user)
+
             print("didSet Container")
             print(user)
         }
@@ -35,7 +36,7 @@ class ContainerViewController: UIViewController {
         super.viewDidLoad()
         checkIfUserIsLoggedIn()
     }
-    
+        
     // MARK: - Selectors
     
     @objc func dismissMenu() {
@@ -97,18 +98,19 @@ class ContainerViewController: UIViewController {
         addChild(chatVC)
         chatVC.didMove(toParent: self)
         view.addSubview(chatVC.view)
-
+        configureBlackView()
     }
     
     func configureMenuController(withUser user: User) {
         menuVC = MenuViewController(user: user)
         menuVC.delegate = self
-        
+
         addChild(menuVC)
         menuVC.didMove(toParent: self)
-        view.insertSubview(menuVC.view, at: 0)
+        view.addSubview(menuVC.view)
+//        view.insertSubview(menuVC.view, at: 0)
+//        configureBlackView()
 
-        configureBlackView()
     }
     
     func configureBlackView() {
@@ -155,10 +157,25 @@ extension ContainerViewController: ChatViewControllerDelegate {
 }
 
 extension ContainerViewController: MenuViewControllerDelegate {
+    func userProfileEdited() {
+        DispatchQueue.global().sync {
+            isExpanded.toggle()
+            animateMenu(shouldExpand: isExpanded)
+            DispatchQueue.main.async {
+                self.configure()
+            }
+        }
+    }
+    
     func handleLogout() {
-        isExpanded.toggle()
-        signOut {
-            self.checkIfUserIsLoggedIn()
+        DispatchQueue.global().sync {
+            isExpanded.toggle()
+            animateMenu(shouldExpand: isExpanded)
+            DispatchQueue.main.async {
+                self.signOut {
+                    self.checkIfUserIsLoggedIn()
+                }
+            }
         }
     }
     

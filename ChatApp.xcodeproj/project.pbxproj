@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		849325952602C35800A8029C /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 849325942602C35800A8029C /* SettingsView.swift */; };
 		84CDB7BA25FCD14900F9A76D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84CDB7B925FCD14900F9A76D /* AppDelegate.swift */; };
 		84CDB7BC25FCD14900F9A76D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84CDB7BB25FCD14900F9A76D /* SceneDelegate.swift */; };
 		84CDB7BE25FCD14900F9A76D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84CDB7BD25FCD14900F9A76D /* ViewController.swift */; };
@@ -33,6 +34,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		849325942602C35800A8029C /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		84CDB7B625FCD14900F9A76D /* ChatApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		84CDB7B925FCD14900F9A76D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		84CDB7BB25FCD14900F9A76D /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -91,6 +93,15 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		849325912602BB7900A8029C /* Auth */ = {
+			isa = PBXGroup;
+			children = (
+				84CDB7F825FCD9EB00F9A76D /* LoginViewController.swift */,
+				84CDB7FB25FCD9FD00F9A76D /* SignUpViewController.swift */,
+			);
+			path = Auth;
+			sourceTree = "<group>";
+		};
 		84CDB7AD25FCD14900F9A76D = {
 			isa = PBXGroup;
 			children = (
@@ -146,6 +157,7 @@
 				84CDB7FF25FCDC0B00F9A76D /* UserAuthWithEmailView.swift */,
 				84CDB82225FD280400F9A76D /* ProfileHeader.swift */,
 				84CDB82925FD2CF700F9A76D /* MenuTableView.swift */,
+				849325942602C35800A8029C /* SettingsView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -153,8 +165,7 @@
 		84CDB7F425FCD97B00F9A76D /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				84CDB7F825FCD9EB00F9A76D /* LoginViewController.swift */,
-				84CDB7FB25FCD9FD00F9A76D /* SignUpViewController.swift */,
+				849325912602BB7900A8029C /* Auth */,
 				84CDB81E25FD1C4300F9A76D /* ContainerViewController.swift */,
 				84CDB7F525FCD99A00F9A76D /* ChatViewController.swift */,
 				84CDB81725FCFC7C00F9A76D /* MenuViewController.swift */,
@@ -296,6 +307,7 @@
 				84CDB81225FCE69F00F9A76D /* Message.swift in Sources */,
 				84CDB80025FCDC0B00F9A76D /* UserAuthWithEmailView.swift in Sources */,
 				84CDB80F25FCE69200F9A76D /* User.swift in Sources */,
+				849325952602C35800A8029C /* SettingsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
