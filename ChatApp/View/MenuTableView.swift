@@ -101,6 +101,10 @@ extension MenuTableView: UITableViewDelegate, UITableViewDataSource {
         default:
             break
         }
+        
+        tableView.indexPathsForSelectedRows?.forEach {
+            tableView.deselectRow(at: $0, animated: true)
+        }
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {

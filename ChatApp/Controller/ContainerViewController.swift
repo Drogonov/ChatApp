@@ -22,8 +22,8 @@ class ContainerViewController: UIViewController {
     var user: User? {
         didSet {
             guard let user = user else { return }
-            configureMenuController(withUser: user)
-            configureHomeController(withUser: user)
+            configureMenuVC(withUser: user)
+            configureChatVC(withUser: user)
 
             print("didSet Container")
             print(user)
@@ -90,7 +90,7 @@ class ContainerViewController: UIViewController {
         fetchUserData()
     }
     
-    func configureHomeController(withUser user: User) {
+    func configureChatVC(withUser user: User) {
         let chatViewController = ChatViewController(user: user)
         chatViewController.delegate = self
         chatVC = UINavigationController(rootViewController: chatViewController)
@@ -101,7 +101,7 @@ class ContainerViewController: UIViewController {
         configureBlackView()
     }
     
-    func configureMenuController(withUser user: User) {
+    func configureMenuVC(withUser user: User) {
         menuVC = MenuViewController(user: user)
         menuVC.delegate = self
 

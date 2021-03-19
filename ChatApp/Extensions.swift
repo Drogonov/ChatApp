@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Firebase
 
 extension UIView {
     
@@ -194,5 +195,11 @@ extension Array where Element: Hashable {
 
     mutating func removeDuplicates() {
         self = self.removingDuplicates()
+    }
+}
+
+extension UIColor {
+    static func rgb(red: CGFloat, green: CGFloat, blue: CGFloat) -> UIColor {
+        return UIColor(red: red/255, green: green/255, blue: blue/255, alpha: 1)
     }
 }
