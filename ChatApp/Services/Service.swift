@@ -9,11 +9,71 @@ import Firebase
 
 // MARK: - DatabaseRefs
 
-let STORAGE_REF = Storage.storage().reference()
-
 let DB_REF = Database.database().reference()
 let REF_USERS = DB_REF.child("users")
 let REF_MESSAGES = DB_REF.child("messages")
+
+protocol AuthService {
+    func handleLogin(email: String, password: String, completion: @escaping(Bool) -> Void)
+    func handleSignUp(email: String, password: String, completion: @escaping(Bool) -> Void)
+}
+
+protocol DataFetcher {
+    func fetchUserData(uid: String, completion: @escaping(User) -> Void)
+    func fetchMessageData(messageKey: String, completion: @escaping(Message) -> Void)
+    func fetchMessagesKeys(completion: @escaping([String]) -> Void)
+}
+
+protocol DataUploader {
+    func updateUserValues(uid: String, values: [String: Any], completion: @escaping(Error?, DatabaseReference) -> Void)
+    func uploadMessage(messageText: String, fromId: String, fromName: String?, imageUrl: String?, completion: @escaping(Error?, DatabaseReference) -> Void)
+}
+
+protocol FirebaseService {
+    func checkIfUserIsLoggedIn(completion: @escaping(Bool) -> Void)
+    func fetchUserData(completion: @escaping(User) -> Void)
+    func signOut(completion: @escaping(Bool) -> Void)
+    func updateProfileImage(completion: @escaping(Bool) -> Void)
+    func updateUserFullname(completion: @escaping(Bool) -> Void)
+    func  fetchMessages(completion: @escaping([Message]) -> Void)
+}
+
+class FirebaseDataFetcher: DataFetcher {
+    func fetchUserData(uid: String, completion: @escaping (User) -> Void) {
+        REF_USERS.child(uid).observeSingleEvent(of: .value) { (snapshot) in
+            guard let dictionary = snapshot.value as? [String: Any] else { return }
+            let uid = snapshot.key
+            let user = User(uid: uid, dictionary: dictionary)
+            DispatchQueue.main.async {
+                completion(user)
+            }
+        }
+    }
+    
+    func fetchMessageData(messageKey: String, completion: @escaping (Message) -> Void) {
+        REF_MESSAGES.child(messageKey).observeSingleEvent(of: .value) { (snapshot) in
+            guard let dictionary = snapshot.value as? [String: Any] else { return }
+            let message = Message(dictionary: dictionary)
+            DispatchQueue.main.async {
+                completion(message)
+            }
+        }
+    }
+    
+    func fetchMessagesKeys(completion: @escaping ([String]) -> Void) {
+        REF_MESSAGES.observeSingleEvent(of: .value) { (snapshot) in
+            if snapshot.exists() {
+                let messages = snapshot.value as! NSDictionary
+                let messagesKeyArray = messages.allKeys as! [String]
+                DispatchQueue.main.async {
+                    completion(messagesKeyArray)
+                }
+            }
+        }
+    }
+}
+
+
 
 
 struct Service {
@@ -37,7 +97,9 @@ struct Service {
             guard let dictionary = snapshot.value as? [String: Any] else { return }
             let uid = snapshot.key
             let user = User(uid: uid, dictionary: dictionary)
-            completion(user)
+            DispatchQueue.main.async {
+                completion(user)
+            }
         }
     }
     
@@ -46,7 +108,9 @@ struct Service {
             if snapshot.exists() {
                 let messages = snapshot.value as! NSDictionary
                 let messagesKeyArray = messages.allKeys as! [String]
-                completion(messagesKeyArray)
+                DispatchQueue.main.async {
+                    completion(messagesKeyArray)
+                }
             }
         }
     }
@@ -55,7 +119,9 @@ struct Service {
         REF_MESSAGES.child(messageKey).observeSingleEvent(of: .value) { (snapshot) in
             guard let dictionary = snapshot.value as? [String: Any] else { return }
             let message = Message(dictionary: dictionary)
-            completion(message)
+            DispatchQueue.main.async {
+                completion(message)
+            }
         }
     }
     

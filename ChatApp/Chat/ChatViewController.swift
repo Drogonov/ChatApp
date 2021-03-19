@@ -152,7 +152,10 @@ class ChatViewController: UIViewController {
 
 extension ChatViewController: MessageInputViewDelegate {
     func handleUploadMessage(message: String) {
-        Service.shared.uploadMessage(messageText: message, fromId: user.uid, fromName: user.fullname, imageUrl: user.profileImageUrl) { (err, ref) in
+        Service.shared.uploadMessage(messageText: message.localizedLowercase.trimmingCharacters(in: .whitespaces),
+                                     fromId: user.uid,
+                                     fromName: user.fullname,
+                                     imageUrl: user.profileImageUrl) { (err, ref) in
             if let error = err {
                 print("DEBUG: Failed to upload message with error \(error)")
                 return
