@@ -13,10 +13,10 @@ protocol FirebaseServiceDelegate {
     func fetchUserData(completion: @escaping(User) -> Void)
     
     func updateProfileImage(user: User, profileImg: UIImage, completion: @escaping (Bool, String?) -> Void)
-    func updateUserFullname(user: User, updatedUsername: String?, completion: @escaping (Bool, String?) -> Void)
+    func updateUserFullname(user: User, updatedUsername: String?, completion: @escaping (Bool) -> Void)
     
     func fetchMessages(completion: @escaping([Message]) -> Void)
-    func uploadMessage(messageText: String, fromId: String, fromName: String?, imageUrl: String?, completion: @escaping(Error?, DatabaseReference) -> Void)
+    func uploadMessage(messageText: String, fromId: String, completion: @escaping(Bool) -> Void)
 }
 
 class FirebaseService: FirebaseServiceDelegate {
@@ -57,6 +57,17 @@ class FirebaseService: FirebaseServiceDelegate {
         }
     }
     
+    func connectionCheck(completion: @escaping(Bool) -> Void) {
+        let connectedRef = Database.database().reference(withPath: ".info/connected")
+        connectedRef.observe(.value, with: { (snapshot) in
+            if snapshot.value as? Bool ?? false {
+                completion(true)
+            } else {
+                completion(false)
+            }
+        })
+    }
+    
     func fetchUserData(completion: @escaping (User) -> Void) {
         guard let currentUid = Auth.auth().currentUser?.uid else { return }
         self.dataFetcher.fetchUserData(uid: currentUid) { user in
@@ -79,7 +90,7 @@ class FirebaseService: FirebaseServiceDelegate {
         }
     }
         
-    func updateUserFullname(user: User, updatedUsername: String?, completion: @escaping (Bool, String?) -> Void) {
+    func updateUserFullname(user: User, updatedUsername: String?, completion: @escaping (Bool) -> Void) {
         var wasUpdateSuccessful = true
         guard let fullname = updatedUsername else { return }
         
@@ -87,11 +98,10 @@ class FirebaseService: FirebaseServiceDelegate {
         self.dataUploader.updateUserValues(uid: user.uid, values: values) { (error, ref) in
             if let error = error {
                 wasUpdateSuccessful = false
-                completion(wasUpdateSuccessful, nil)
                 print("DEBUG: Failed to update user fullname with error \(error.localizedDescription)")
-                return
+                completion(wasUpdateSuccessful)
             }
-            completion(wasUpdateSuccessful, fullname)
+            completion(wasUpdateSuccessful)
         }
     }
     
@@ -103,18 +113,32 @@ class FirebaseService: FirebaseServiceDelegate {
             let group = DispatchGroup()
             for i in 0..<keys.count {
                 group.enter()
-                self.dataFetcher.fetchMessageData(messageKey: keys[i]) { (message) in defer { group.leave() }
-                    messages.append(message)
+                self.dataFetcher.fetchMessageData(messageKey: keys[i]) { (message) in
+                    var loadedMessage = message
+                    self.dataFetcher.fetchUserData(uid: message.fromId) { (fromUser) in defer { group.leave() }
+                        loadedMessage.fromName = fromUser.fullname
+                        loadedMessage.imageUrl = fromUser.profileImageUrl
+                        messages.append(loadedMessage)
+                    }
                 }
             }
             group.notify(queue: .main) {
-                completion(messages)
+                let sortedMessages = messages.sorted {
+                    $0.creationDate < $1.creationDate
+                }
+                completion(sortedMessages)
             }
         }
     }
     
-    func uploadMessage(messageText: String, fromId: String, fromName: String?, imageUrl: String?, completion: @escaping (Error?, DatabaseReference) -> Void) {
-        dataUploader.uploadMessage(messageText: messageText, fromId: fromId, fromName: fromName, imageUrl: imageUrl, completion: completion)
+    func uploadMessage(messageText: String, fromId: String, completion: @escaping(Bool) -> Void) {
+        dataUploader.uploadMessage(messageText: messageText, fromId: fromId) { (error, ref) in
+            if let error = error {
+                print("DEBUG: Failed to upload message with error \(error)")
+                completion(false)
+            }
+            completion(true)
+        }
     }
     
     // MARK: - Helper Functions

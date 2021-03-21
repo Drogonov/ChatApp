@@ -17,14 +17,14 @@ class MessageInputView: UIView {
     
     var delegate: MessageInputViewDelegate?
     
-    let messageInputTextView: MessageInputTextView = {
+    private let messageInputTextView: MessageInputTextView = {
         let tv = MessageInputTextView()
         tv.font = UIFont.systemFont(ofSize: 16)
         tv.isScrollEnabled = false
         return tv
     }()
     
-    let sendButton: UIButton = {
+    private let sendButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Send", for: .normal)
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
@@ -38,11 +38,10 @@ class MessageInputView: UIView {
         super.init(frame: frame)
         
         autoresizingMask = .flexibleHeight
-        
-        backgroundColor = .white
+        backgroundColor = .systemBackground
         
         addSubview(sendButton)
-        sendButton.anchor(top: topAnchor, right: rightAnchor, paddingRight: 8, width: 50, height: 50)
+        sendButton.anchor(bottom: bottomAnchor, right: rightAnchor, paddingRight: 8, width: 50, height: 50)
         
         addSubview(messageInputTextView)
         messageInputTextView.anchor(top: topAnchor, left: leftAnchor, bottom: safeAreaLayoutGuide.bottomAnchor, right: sendButton.leftAnchor, paddingTop: 8, paddingLeft: 4, paddingRight: 8)
@@ -51,16 +50,13 @@ class MessageInputView: UIView {
         separatorView.backgroundColor = .lightGray
         addSubview(separatorView)
         separatorView.anchor(top: topAnchor, left: leftAnchor, right: rightAnchor, height: 0.5)
+        
     }
-    
-    override var intrinsicContentSize: CGSize {
-        return .zero
-    }
-    
+        
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     func clearMessageTextView() {
         messageInputTextView.placeholderLabel.isHidden = false
         messageInputTextView.text = nil
@@ -70,7 +66,9 @@ class MessageInputView: UIView {
     
     @objc func handleUploadMessage() {
         guard let message = messageInputTextView.text else { return }
-        delegate?.handleUploadMessage(message: message)
+        if message != "" {
+            delegate?.handleUploadMessage(message: message)
+        }
     }
 }
 

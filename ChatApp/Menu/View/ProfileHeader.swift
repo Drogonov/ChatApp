@@ -10,6 +10,8 @@ import Firebase
 
 class ProfileHeader: UIView {
     
+    // MARK: - Properties
+    
     private let profileImageViewSize: CGFloat = 80
     
     private var profileImageView: WebImageView = {
@@ -50,6 +52,8 @@ class ProfileHeader: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    // MARK: - Helper Functions
     
     private func configureUI() {
         

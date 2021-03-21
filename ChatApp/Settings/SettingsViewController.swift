@@ -19,17 +19,15 @@ class SettingsViewController: UIViewController {
     private var user: User
     private var settingsView = SettingsView()
     
-    var imageSelected = false
-    var imageTapped = false
-    var selectedImage = UIImage()
-    var usernameChanged = false
-    var updatedUsername: String?
-    
     weak var delegate: SettingsViewControllerDelegate?
     
-    let alert = UIAlertController(title: nil,
-                                  message: "Updating your profile",
-                                  preferredStyle: .alert)
+    private var imageSelected = false
+    private var imageTapped = false
+    private var selectedImage = UIImage()
+    private var usernameChanged = false
+    private var updatedUsername: String?
+    
+    private let firebaseService = FirebaseService()
     
     // MARK: - Lifecycle
     
@@ -47,11 +45,16 @@ class SettingsViewController: UIViewController {
         configureUI()
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
     // MARK: - Selectors
     
     @objc func handleGesture(gesture: UISwipeGestureRecognizer) -> Void {
         if gesture.direction == .down {
-            self.dismiss(animated: true, completion: nil)
+            self.showMenuVC()
         }
     }
     
@@ -59,6 +62,10 @@ class SettingsViewController: UIViewController {
         if notification.name == UIResponder.keyboardWillHideNotification {
             view.layoutIfNeeded()
         }
+    }
+    
+    @objc func showMenuVC() {
+        self.dismiss(animated: true, completion: nil)
     }
     
     // MARK: - Helper Functions
@@ -77,6 +84,9 @@ class SettingsViewController: UIViewController {
         navigationController?.navigationBar.tintColor = UIColor.systemRed
         
         navigationItem.title = "Settings"
+        
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage().systemImage(withSystemName: "chevron.left"), style: .plain, target: self, action: #selector(showMenuVC))
+        
     }
     
     func configureSettingsView() {
@@ -105,8 +115,44 @@ class SettingsViewController: UIViewController {
     
     // MARK: - API
     
-    func handleUpdateProfile() {
-        self.present(alert, animated: true, completion: nil)
+    func updateUserFullname(completion: @escaping() -> Void) {
+        firebaseService.updateUserFullname(user: user, updatedUsername: updatedUsername) { (wasUpdateSuccessful) in
+            if wasUpdateSuccessful == true {
+                guard let username = self.updatedUsername else { return }
+                self.user.fullname = username
+                completion()
+            } else {
+                self.showNotification(title: "Error updating user Fullname", defaultAction: true, defaultActionText: "Ok") {}
+                completion()
+            }
+        }
+    }
+    
+    func updateProfileImage(completion: @escaping() -> Void) {
+        let profileImg = selectedImage
+        firebaseService.updateProfileImage(user: user, profileImg: profileImg) { (wasUpdateSuccessful, profileImageUrl) in
+            if wasUpdateSuccessful == true {
+                guard let url = profileImageUrl else { return }
+                self.user.profileImageUrl = url
+                completion()
+            } else {
+                self.showNotification(title: "Error updating user Profileimage", defaultAction: true, defaultActionText: "Ok") {}
+                completion()
+            }
+        }
+    }
+}
+
+// MARK: - SettingsViewDelegate
+
+extension SettingsViewController: SettingsViewDelegate {
+    func handleSelectProfilePhoto() {
+        imageTapped = true
+        handleSelectProfilePhotoTapped()
+    }
+    
+    func handleActionButton() {
+        showNotification(title: "Updating your profile", defaultAction: true, defaultActionText: "Ok") {}
         view.endEditing(true)
         
         let group = DispatchGroup()
@@ -123,127 +169,8 @@ class SettingsViewController: UIViewController {
             })
         }
         group.notify(queue: .main) {
-            self.userProfileEdited()
+            self.delegate?.userProfileEdited()
         }
-
-        
-        //        if imageSelected {
-        //            updateProfileImage()
-        //        }
-        //
-        //        if usernameChanged {
-        //            updateUserFullname()
-        //        }
-        //
-        //        userProfileEdited()
-    }
-    
-    
-    func updateUserFullname(completion: @escaping() -> Void) {
-        print("updateUserFullname start")
-        
-        let fullname = updatedUsername ?? self.user.fullname ?? ""
-        
-        let values = ["fullname": fullname] as [String : Any]
-        
-        DB.REF_USERS.child(user.uid).updateChildValues(values, withCompletionBlock: { (error, ref) in
-            if let error = error {
-                print("DEBUG: Failed to update user fullname with error \(error.localizedDescription)")
-                return
-            }
-            
-            self.user.fullname = fullname
-            print("updateUserFullname end")
-            completion()
-        })
-        
-    }
-    
-    func updateProfileImage(completion: @escaping() -> Void) {
-        print("updateProfileImage start")
-        let profileImg = selectedImage
-        guard let uploadData = profileImg.jpegData(compressionQuality: 0.3) else { return }
-        
-        let filename = NSUUID().uuidString
-        
-        if self.user.profileImageUrl == "" {
-            uploadProfileImage(withData: uploadData, withFilename: filename, completion: completion)
-        } else {
-            deleteImageFromStorage(completion: {
-                self.uploadProfileImage(withData: uploadData, withFilename: filename, completion: completion)
-            })
-        }
-    }
-    
-    func uploadProfileImage(withData uploadData: Data, withFilename filename: String, completion: @escaping() -> Void) {
-        
-        let storageRef = Storage.storage().reference().child("profile_images").child(filename)
-        storageRef.putData(uploadData, metadata: nil, completion: { (metadata, error) in
-            
-            if let error = error {
-                print("DEBUG: Failed to upload image to Firebase Storage with error", error.localizedDescription)
-                return
-            }
-            
-            storageRef.downloadURL(completion: { (downloadURL, error) in
-                guard let profileImageUrl = downloadURL?.absoluteString else {
-                    print("DEBUG: Profile image url is nil")
-                    return
-                }
-                self.user.profileImageUrl = profileImageUrl
-                
-                DB_REF.child("users/\(self.user.uid)/profileImageUrl").setValue(profileImageUrl) { (error, ref) in
-                    if let error = error {
-                        print("DEBUG: Failed to update user profile URL in Firebase", error.localizedDescription)
-                        return
-                    }
-                    print("updateProfileImage end")
-                    completion()
-                }
-            })
-        })
-    }
-    
-    func deleteImageFromStorage(completion: @escaping() -> Void) {
-        guard let storagePath = user.profileImageUrl else { return }
-        let desertRef = Storage.storage().reference(forURL: storagePath)
-        desertRef.delete { error in
-            if let error = error {
-                print("DEBUG: Failed to delete image", error.localizedDescription)
-                return
-            }
-            completion()
-        }
-    }
-    
-    func userProfileEdited() {
-        print("userProfileEdited start")
-        
-        self.alert.dismiss(animated: true, completion: {
-            //            self.delegate?.userProfileEdited()
-            print("userProfileEdited end")
-        })
-        
-        //        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-        //            self.alert.dismiss(animated: true, completion: {
-        //                self.delegate?.userProfileEdited()
-        //            })
-        //        }
-    }
-}
-
-// MARK: - SettingsViewDelegate
-
-extension SettingsViewController: SettingsViewDelegate {
-    func handleSelectProfilePhoto() {
-        print("handleSelectProfilePhoto")
-        imageTapped = true
-        handleSelectProfilePhotoTapped()
-    }
-    
-    func handleActionButton() {
-        print("handleActionButton")
-        handleUpdateProfile()
     }
 }
 
@@ -285,12 +212,14 @@ extension SettingsViewController: UITextFieldDelegate {
         let trimmedString = text?.replacingOccurrences(of: "\\s+$", with: "", options: .regularExpression)
         
         guard user.fullname != trimmedString else {
+            showNotification(title: "You did not change you username", defaultAction: true, defaultActionText: "Ok") {}
             print("ERROR: You did not change you username")
             usernameChanged = false
             return
         }
         
         guard trimmedString != "" else {
+            showNotification(title: "Please enter a valid username", defaultAction: true, defaultActionText: "Ok") {}
             print("ERROR: Please enter a valid username")
             usernameChanged = false
             return

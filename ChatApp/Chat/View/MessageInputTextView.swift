@@ -26,8 +26,8 @@ class MessageInputTextView: UITextView {
         NotificationCenter.default.addObserver(self, selector: #selector(handleInputTextChange), name: UITextView.textDidChangeNotification, object: nil)
         
         addSubview(placeholderLabel)
-        placeholderLabel.anchor(top: nil, left: leftAnchor, right: rightAnchor, paddingLeft: 8)
-        placeholderLabel.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+        placeholderLabel.anchor(left: leftAnchor, right: rightAnchor, paddingLeft: 8)
+        placeholderLabel.centerY(inView: self)
     }
     
     required init?(coder aDecoder: NSCoder) {

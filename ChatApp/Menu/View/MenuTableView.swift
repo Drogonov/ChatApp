@@ -26,6 +26,8 @@ protocol MenuTableViewDelegate: class {
 
 class MenuTableView: UIView {
     
+    // MARK: - Properties
+    
     weak var delegate: MenuTableViewDelegate?
     
     private let defaultCell = "DefaultCell"
@@ -33,6 +35,8 @@ class MenuTableView: UIView {
     private var user: User
     private var tableView = UITableView(frame: .zero, style: .plain)
     private var profileHeader = ProfileHeader()
+    
+    // MARK: - Init
         
     init(frame: CGRect, user: User) {
         self.user = user
@@ -45,6 +49,8 @@ class MenuTableView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    // MARK: - Helper Functions
     
     private func configureUI() {
         
@@ -80,6 +86,8 @@ class MenuTableView: UIView {
     }
     
 }
+
+// MARK: - UITableViewDelegate, UITableViewDataSource
 
 extension MenuTableView: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

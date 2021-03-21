@@ -15,6 +15,9 @@ class ContainerViewController: UIViewController {
     private var loginVC = LoginViewController()
     private var chatVC: UIViewController!
     private var menuVC: MenuViewController!
+    
+    private let firebaseService = FirebaseService()
+    
     private var isExpanded = false
     private let blackView = UIView()
     private lazy var xOrigin = self.view.frame.width - 80
@@ -24,9 +27,6 @@ class ContainerViewController: UIViewController {
             guard let user = user else { return }
             configureMenuVC(withUser: user)
             configureChatVC(withUser: user)
-
-            print("didSet Container")
-            print(user)
         }
     }
     
@@ -47,28 +47,29 @@ class ContainerViewController: UIViewController {
     // MARK: - API
     
     func checkIfUserIsLoggedIn() {
-        print("checkIfUserIsLoggedIn")
-        if Auth.auth().currentUser?.uid == nil {
-            loginVC.delegate = self
-            presentLoginController()
-        } else {
-            configure()
+        firebaseService.checkIfUserIsLoggedIn { (wasCheckSuccessful) in
+            if wasCheckSuccessful == true {
+                self.loginVC.delegate = self
+                self.presentLoginController()
+            } else {
+                self.configure()
+            }
         }
     }
     
     func fetchUserData() {
-        guard let currentUid = Auth.auth().currentUser?.uid else { return }
-        Service.shared.fetchUserData(uid: currentUid) { user in
+        firebaseService.fetchUserData { (user) in
             self.user = user
         }
     }
     
     func signOut(completion: @escaping() -> Void) {
-        do {
-            try Auth.auth().signOut()
-            completion()
-        } catch {
-            print("DEBUG: Error signing out")
+        firebaseService.signOut { (wasSignOutSuccessful) in
+            if wasSignOutSuccessful == true {
+                completion()
+            } else {
+                self.showNotification(title: "Error logging out", defaultAction: true, defaultActionText: "Ok") {}
+            }
         }
     }
     
@@ -81,6 +82,7 @@ class ContainerViewController: UIViewController {
                 nav.isModalInPresentation = true
             }
             nav.modalPresentationStyle = .fullScreen
+            nav.navigationBar.tintColor = UIColor.systemRed
             self.present(nav, animated: true, completion: nil)
         }
     }
@@ -140,11 +142,15 @@ class ContainerViewController: UIViewController {
     }
 }
 
+// MARK: - LoginViewControllerDelegate
+
 extension ContainerViewController: LoginViewControllerDelegate {
     func loginWithEmail(_ controller: LoginViewController) {
         checkIfUserIsLoggedIn()
     }
 }
+
+// MARK: - ChatViewControllerDelegate
 
 extension ContainerViewController: ChatViewControllerDelegate {
     func handleMenuToggle() {
@@ -152,6 +158,8 @@ extension ContainerViewController: ChatViewControllerDelegate {
         animateMenu(shouldExpand: isExpanded)
     }
 }
+
+// MARK: - MenuViewControllerDelegate
 
 extension ContainerViewController: MenuViewControllerDelegate {
     func userProfileEdited() {

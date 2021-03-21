@@ -28,6 +28,12 @@ class LoginViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
+        connectionCheck()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     // MARK: - Selectors
@@ -89,15 +95,15 @@ class LoginViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(Keyboard), name: UIResponder.keyboardWillShowNotification, object: nil)
     }
     
-    // MARK: - Protocol Functions
-    
+    // MARK: - API
+        
     func handleLogin(email: String, password: String) {
         authServise.handleLogin(email: email, password: password) { (wasAuthSuccessful) in
             if wasAuthSuccessful == true {
                 self.delegate?.loginWithEmail(self)
                 self.dismiss(animated: true, completion: nil)
             } else {
-                print(wasAuthSuccessful)
+                self.showNotification(title: "Smth goes wwrong with Loggin in, pls try again", defaultAction: true, defaultActionText: "Ok") {}
             }
         }
     }
@@ -112,6 +118,8 @@ extension LoginViewController: UserAuthWithEmailViewDelegate {
         handleLogin(email: email, password: password)
     }
 }
+
+// MARK: - SignUpViewControllerDelegate
 
 extension LoginViewController: SignUpViewControllerDelegate {
     func signUpWithEmail(_ controller: SignUpViewController) {

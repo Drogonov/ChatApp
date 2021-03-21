@@ -165,23 +165,48 @@ extension UIViewController {
         self.present(alert, animated: true, completion: nil)
     }
     
-}
-
-extension UIButton {
-    private struct AssociatedKeys {
-        static var sectionTag: Int?
-    }
-    var sectionTag: Int! {
-        get {
-            guard let sectionTag = objc_getAssociatedObject(self, &AssociatedKeys.sectionTag) as? Int else {
-                return Int()
+    func connectionCheck() {
+        let firebaseService = FirebaseService()
+        firebaseService.connectionCheck { (doesUserConnected) in
+            if doesUserConnected == false {
+                self.showNotification(title: "Pls turn on the internet", defaultAction: true, defaultActionText: "Ok") {}
             }
-            return sectionTag
-        }
-        set(value) {
-            objc_setAssociatedObject(self, &AssociatedKeys.sectionTag, value, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
+    
+    func animateWithKeyboard(
+        notification: NSNotification,
+        animations: ((_ keyboardFrame: CGRect) -> Void)?) {
+        // Extract the duration of the keyboard animation
+        let durationKey = UIResponder.keyboardAnimationDurationUserInfoKey
+        let duration = notification.userInfo![durationKey] as! Double
+        
+        // Extract the final frame of the keyboard
+        let frameKey = UIResponder.keyboardFrameEndUserInfoKey
+        let keyboardFrameValue = notification.userInfo![frameKey] as! NSValue
+        
+        // Extract the curve of the iOS keyboard animation
+        let curveKey = UIResponder.keyboardAnimationCurveUserInfoKey
+        let curveValue = notification.userInfo![curveKey] as! Int
+        let curve = UIView.AnimationCurve(rawValue: curveValue)!
+
+        // Create a property animator to manage the animation
+        let animator = UIViewPropertyAnimator(
+            duration: duration,
+            curve: curve
+        ) {
+            // Perform the necessary animation layout updates
+            animations?(keyboardFrameValue.cgRectValue)
+            
+            // Required to trigger NSLayoutConstraint changes
+            // to animate
+            self.view?.layoutIfNeeded()
+        }
+        
+        // Start the animation
+        animator.startAnimation()
+    }
+    
 }
 
 extension Array where Element: Hashable {
@@ -201,5 +226,37 @@ extension Array where Element: Hashable {
 extension UIColor {
     static func rgb(red: CGFloat, green: CGFloat, blue: CGFloat) -> UIColor {
         return UIColor(red: red/255, green: green/255, blue: blue/255, alpha: 1)
+    }
+}
+
+extension String {
+    
+    func height(width: CGFloat, font: UIFont) -> CGFloat {
+        let textSize = CGSize(width: width, height: .greatestFiniteMagnitude)
+        
+        let size = self.boundingRect(with: textSize,
+                                     options: .usesLineFragmentOrigin,
+                                     attributes: [NSAttributedString.Key.font : font],
+                                     context: nil)
+        return ceil(size.height)
+    }
+    
+}
+
+extension UICollectionView {
+    func scrollToLast() {
+        guard numberOfSections > 0 else {
+            return
+        }
+
+        let lastSection = numberOfSections - 1
+
+        guard numberOfItems(inSection: lastSection) > 0 else {
+            return
+        }
+
+        let lastItemIndexPath = IndexPath(item: numberOfItems(inSection: lastSection) - 1,
+                                          section: lastSection)
+        scrollToItem(at: lastItemIndexPath, at: .bottom, animated: true)
     }
 }

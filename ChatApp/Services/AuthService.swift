@@ -25,7 +25,7 @@ class AuthService: AuthServiceDelegate {
     }
     
     // MARK: - Delegate Methods
-    
+        
     func handleLogin(email: String, password: String, completion: @escaping(Bool) -> Void) {
         var wasAuthSuccessful = true
         Auth.auth().signIn(withEmail: email, password: password) { (result, error) in

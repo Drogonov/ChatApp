@@ -20,8 +20,6 @@ class MenuViewController: UIViewController {
     
     var user: User {
         didSet {
-            print("didSet")
-            print(user)
             configureUI()
         }
     }
@@ -44,15 +42,12 @@ class MenuViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
-        print("viewDidLoad")
-        print(user)
     }
     
     // MARK: - Selectors
     
     @objc func handleGesture(gesture: UISwipeGestureRecognizer) -> Void {
         if gesture.direction == .left {
-            print("showChat")
             delegate?.handleChatToggle()
         }
     }
@@ -100,11 +95,14 @@ class MenuViewController: UIViewController {
                 nav.isModalInPresentation = true
             }
             nav.modalPresentationStyle = .popover
+            nav.navigationBar.tintColor = UIColor.systemRed
             self.present(nav, animated: true, completion: nil)
         }
     }
     
 }
+
+// MARK: - MenuTableViewDelegate
 
 extension MenuViewController: MenuTableViewDelegate {
     func handleSettingsToggle() {
@@ -115,6 +113,8 @@ extension MenuViewController: MenuTableViewDelegate {
         delegate?.handleLogout()
     }
 }
+
+// MARK: - SettingsViewControllerDelegate
 
 extension MenuViewController: SettingsViewControllerDelegate {
     func userProfileEdited() {

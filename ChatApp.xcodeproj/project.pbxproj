@@ -21,7 +21,6 @@
 		84CDB80025FCDC0B00F9A76D /* UserAuthWithEmailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84CDB7FF25FCDC0B00F9A76D /* UserAuthWithEmailView.swift */; };
 		84CDB80325FCDC3C00F9A76D /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84CDB80225FCDC3C00F9A76D /* Extensions.swift */; };
 		84CDB80725FCDCC200F9A76D /* ActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84CDB80625FCDCC200F9A76D /* ActionButton.swift */; };
-		84CDB80B25FCE61600F9A76D /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84CDB80A25FCE61600F9A76D /* Service.swift */; };
 		84CDB80F25FCE69200F9A76D /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84CDB80E25FCE69200F9A76D /* User.swift */; };
 		84CDB81225FCE69F00F9A76D /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84CDB81125FCE69F00F9A76D /* Message.swift */; };
 		84CDB81825FCFC7C00F9A76D /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84CDB81725FCFC7C00F9A76D /* MenuViewController.swift */; };
@@ -34,7 +33,6 @@
 		84DFA8592603FD6A000A6ADB /* ChatCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84DFA8582603FD6A000A6ADB /* ChatCollectionView.swift */; };
 		84E088442604EB1100EDAB62 /* FirebaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84E088432604EB1100EDAB62 /* FirebaseService.swift */; };
 		84E088472604EBE400EDAB62 /* DB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84E088462604EBE400EDAB62 /* DB.swift */; };
-		84E0884B260504E400EDAB62 /* AnimateService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84E0884A260504E400EDAB62 /* AnimateService.swift */; };
 		84E0884F26050C7100EDAB62 /* DataFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84E0884E26050C7100EDAB62 /* DataFetcher.swift */; };
 		84E0885326050D3E00EDAB62 /* DataUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84E0885226050D3E00EDAB62 /* DataUploader.swift */; };
 		84E08858260511C100EDAB62 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84E08857260511C100EDAB62 /* AuthService.swift */; };
@@ -58,7 +56,6 @@
 		84CDB7FF25FCDC0B00F9A76D /* UserAuthWithEmailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAuthWithEmailView.swift; sourceTree = "<group>"; };
 		84CDB80225FCDC3C00F9A76D /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		84CDB80625FCDCC200F9A76D /* ActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionButton.swift; sourceTree = "<group>"; };
-		84CDB80A25FCE61600F9A76D /* Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
 		84CDB80E25FCE69200F9A76D /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		84CDB81125FCE69F00F9A76D /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		84CDB81725FCFC7C00F9A76D /* MenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
@@ -71,7 +68,6 @@
 		84DFA8582603FD6A000A6ADB /* ChatCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatCollectionView.swift; sourceTree = "<group>"; };
 		84E088432604EB1100EDAB62 /* FirebaseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseService.swift; sourceTree = "<group>"; };
 		84E088462604EBE400EDAB62 /* DB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DB.swift; sourceTree = "<group>"; };
-		84E0884A260504E400EDAB62 /* AnimateService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateService.swift; sourceTree = "<group>"; };
 		84E0884E26050C7100EDAB62 /* DataFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataFetcher.swift; sourceTree = "<group>"; };
 		84E0885226050D3E00EDAB62 /* DataUploader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataUploader.swift; sourceTree = "<group>"; };
 		84E08857260511C100EDAB62 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
@@ -166,14 +162,12 @@
 		8490F33A2604BE500022EAEB /* Services */ = {
 			isa = PBXGroup;
 			children = (
-				84E0884A260504E400EDAB62 /* AnimateService.swift */,
 				84CDB7F225FCD96C00F9A76D /* Model */,
 				84E088462604EBE400EDAB62 /* DB.swift */,
 				84E0884E26050C7100EDAB62 /* DataFetcher.swift */,
 				84E0885226050D3E00EDAB62 /* DataUploader.swift */,
 				84E08857260511C100EDAB62 /* AuthService.swift */,
 				84E088432604EB1100EDAB62 /* FirebaseService.swift */,
-				84CDB80A25FCE61600F9A76D /* Service.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -386,7 +380,6 @@
 				84CDB80325FCDC3C00F9A76D /* Extensions.swift in Sources */,
 				84DFA8592603FD6A000A6ADB /* ChatCollectionView.swift in Sources */,
 				84CDB7F625FCD99A00F9A76D /* ChatViewController.swift in Sources */,
-				84E0884B260504E400EDAB62 /* AnimateService.swift in Sources */,
 				84CDB80725FCDCC200F9A76D /* ActionButton.swift in Sources */,
 				84E088442604EB1100EDAB62 /* FirebaseService.swift in Sources */,
 				84E0884F26050C7100EDAB62 /* DataFetcher.swift in Sources */,
@@ -396,7 +389,6 @@
 				84CDB81B25FCFC9A00F9A76D /* SettingsViewController.swift in Sources */,
 				84CDB7F925FCD9EB00F9A76D /* LoginViewController.swift in Sources */,
 				84614C8B2603BCAF0033D125 /* ChatCell.swift in Sources */,
-				84CDB80B25FCE61600F9A76D /* Service.swift in Sources */,
 				84CDB7BC25FCD14900F9A76D /* SceneDelegate.swift in Sources */,
 				84CDB81225FCE69F00F9A76D /* Message.swift in Sources */,
 				84CDB80025FCDC0B00F9A76D /* UserAuthWithEmailView.swift in Sources */,

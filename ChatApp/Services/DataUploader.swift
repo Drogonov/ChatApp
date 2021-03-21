@@ -9,7 +9,7 @@ import Firebase
 
 protocol DataUploaderDelegate {
     func updateUserValues(uid: String, values: [String: Any], completion: @escaping(Error?, DatabaseReference) -> Void)
-    func uploadMessage(messageText: String, fromId: String, fromName: String?, imageUrl: String?, completion: @escaping (Error?, DatabaseReference) -> Void)
+    func uploadMessage(messageText: String, fromId: String, completion: @escaping (Error?, DatabaseReference) -> Void)
     
 }
 
@@ -17,11 +17,11 @@ class DataUploader: DataUploaderDelegate {
     func updateUserValues(uid: String, values: [String : Any], completion: @escaping (Error?, DatabaseReference) -> Void) {
         DB.REF_USERS.child(uid).updateChildValues(values, withCompletionBlock: completion)
     }
-    func uploadMessage(messageText: String, fromId: String, fromName: String?, imageUrl: String?, completion: @escaping (Error?, DatabaseReference) -> Void) {
+    func uploadMessage(messageText: String, fromId: String, completion: @escaping (Error?, DatabaseReference) -> Void) {
+        let creationDate = Int(NSDate().timeIntervalSince1970)
         let values = ["messageText": messageText,
                       "fromId": fromId,
-                      "fromName": fromName as Any,
-                      "imageUrl": imageUrl as Any] as [String : Any]
+                      "creationDate": creationDate as Any] as [String : Any]
         
         guard let messageID = DB.REF_MESSAGES.childByAutoId().key else { return }
         DB.REF_MESSAGES.child(messageID).updateChildValues(values) { (err, ref) in

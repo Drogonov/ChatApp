@@ -18,14 +18,20 @@ class SignUpViewController: UIViewController {
     // MARK: - Properties
     
     weak var delegate: SignUpViewControllerDelegate?
-    
     private lazy var userAuthView = UserAuthWithEmailView()
+    private let authServise = AuthService()
     
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
+        connectionCheck()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     // MARK: - Selectors
@@ -79,25 +85,14 @@ class SignUpViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(Keyboard), name: UIResponder.keyboardWillShowNotification, object: nil)
     }
     
-    // MARK: - Protocol Functions
+    // MARK: - API
     
     func handleSignUp(email: String, password: String) {
-        Auth.auth().createUser(withEmail: email, password: password) { (result, error) in
-            if let error = error {
-                print("DEBUG: Failed to register user with error \(error.localizedDescription)")
-                return
-            }
-            
-            guard let uid = result?.user.uid else { return }
-            
-            let values = ["email": email] as [String : Any]
-            
-            Service.shared.updateUserValues(uid: uid, values: values) { (err, ref) in
-                if let error = error {
-                    print("DEBUG: Failed to register user with error \(error.localizedDescription)")
-                    return
-                }
+        authServise.handleSignUp(email: email, password: password) { (wasSignUpSuccessful) in
+            if wasSignUpSuccessful == true {
                 self.delegate?.signUpWithEmail(self)
+            } else {
+                self.showNotification(title: "Smth goes wwrong with Signing up, pls try again", defaultAction: true, defaultActionText: "Ok") {}
             }
         }
     }
