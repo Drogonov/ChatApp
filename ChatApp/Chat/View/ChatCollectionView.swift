@@ -82,7 +82,7 @@ class ChatCollectionView: UICollectionView, UICollectionViewDelegate, UICollecti
 extension ChatCollectionView: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let message = messages[indexPath.item]
-        let height = message.messageText.height(width: 200, font: UIFont.systemFont(ofSize: 16)) + 20
+        let height = message.messageText.height(width: 180, font: UIFont.systemFont(ofSize: 16)) + 20
         return CGSize(width: collectionView.bounds.width, height: height)
     }
 }

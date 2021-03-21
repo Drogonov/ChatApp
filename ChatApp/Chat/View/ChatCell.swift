@@ -97,6 +97,9 @@ class ChatCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         initialsLabel.text = ""
+        textView.text = ""
+        profileImageView.image = UIImage()
+        
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -108,8 +111,6 @@ class ChatCell: UICollectionViewCell {
         if imageUrl != nil {
             profileImageView.set(imageURL: imageUrl)
         } else {
-            print("initials")
-            print(initials)
             initialsLabel.text = initials
         }
     }
