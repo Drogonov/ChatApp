@@ -33,7 +33,11 @@
 		84DFA8542603F3D8000A6ADB /* MessageInputTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84DFA8532603F3D8000A6ADB /* MessageInputTextView.swift */; };
 		84DFA8592603FD6A000A6ADB /* ChatCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84DFA8582603FD6A000A6ADB /* ChatCollectionView.swift */; };
 		84E088442604EB1100EDAB62 /* FirebaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84E088432604EB1100EDAB62 /* FirebaseService.swift */; };
-		84E088472604EBE400EDAB62 /* DatabaseRef.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84E088462604EBE400EDAB62 /* DatabaseRef.swift */; };
+		84E088472604EBE400EDAB62 /* DB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84E088462604EBE400EDAB62 /* DB.swift */; };
+		84E0884B260504E400EDAB62 /* AnimateService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84E0884A260504E400EDAB62 /* AnimateService.swift */; };
+		84E0884F26050C7100EDAB62 /* DataFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84E0884E26050C7100EDAB62 /* DataFetcher.swift */; };
+		84E0885326050D3E00EDAB62 /* DataUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84E0885226050D3E00EDAB62 /* DataUploader.swift */; };
+		84E08858260511C100EDAB62 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84E08857260511C100EDAB62 /* AuthService.swift */; };
 		D82A8FD5E45D93A5CF2A0B3E /* Pods_ChatApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A97869201F0362B0F4D8230 /* Pods_ChatApp.framework */; };
 /* End PBXBuildFile section */
 
@@ -66,7 +70,11 @@
 		84DFA8532603F3D8000A6ADB /* MessageInputTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageInputTextView.swift; sourceTree = "<group>"; };
 		84DFA8582603FD6A000A6ADB /* ChatCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatCollectionView.swift; sourceTree = "<group>"; };
 		84E088432604EB1100EDAB62 /* FirebaseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseService.swift; sourceTree = "<group>"; };
-		84E088462604EBE400EDAB62 /* DatabaseRef.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseRef.swift; sourceTree = "<group>"; };
+		84E088462604EBE400EDAB62 /* DB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DB.swift; sourceTree = "<group>"; };
+		84E0884A260504E400EDAB62 /* AnimateService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateService.swift; sourceTree = "<group>"; };
+		84E0884E26050C7100EDAB62 /* DataFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataFetcher.swift; sourceTree = "<group>"; };
+		84E0885226050D3E00EDAB62 /* DataUploader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataUploader.swift; sourceTree = "<group>"; };
+		84E08857260511C100EDAB62 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
 		9A97869201F0362B0F4D8230 /* Pods_ChatApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ChatApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1EA70F4FC9C1EDE3F59735E /* Pods-ChatApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatApp.release.xcconfig"; path = "Target Support Files/Pods-ChatApp/Pods-ChatApp.release.xcconfig"; sourceTree = "<group>"; };
 		E4157C3B7A8CF55C92227273 /* Pods-ChatApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatApp.debug.xcconfig"; path = "Target Support Files/Pods-ChatApp/Pods-ChatApp.debug.xcconfig"; sourceTree = "<group>"; };
@@ -158,10 +166,14 @@
 		8490F33A2604BE500022EAEB /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				84E0884A260504E400EDAB62 /* AnimateService.swift */,
 				84CDB7F225FCD96C00F9A76D /* Model */,
-				84E088462604EBE400EDAB62 /* DatabaseRef.swift */,
-				84CDB80A25FCE61600F9A76D /* Service.swift */,
+				84E088462604EBE400EDAB62 /* DB.swift */,
+				84E0884E26050C7100EDAB62 /* DataFetcher.swift */,
+				84E0885226050D3E00EDAB62 /* DataUploader.swift */,
+				84E08857260511C100EDAB62 /* AuthService.swift */,
 				84E088432604EB1100EDAB62 /* FirebaseService.swift */,
+				84CDB80A25FCE61600F9A76D /* Service.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -370,13 +382,16 @@
 				84CDB82A25FD2CF700F9A76D /* MenuTableView.swift in Sources */,
 				84DFA8542603F3D8000A6ADB /* MessageInputTextView.swift in Sources */,
 				84CDB7BA25FCD14900F9A76D /* AppDelegate.swift in Sources */,
-				84E088472604EBE400EDAB62 /* DatabaseRef.swift in Sources */,
+				84E088472604EBE400EDAB62 /* DB.swift in Sources */,
 				84CDB80325FCDC3C00F9A76D /* Extensions.swift in Sources */,
 				84DFA8592603FD6A000A6ADB /* ChatCollectionView.swift in Sources */,
 				84CDB7F625FCD99A00F9A76D /* ChatViewController.swift in Sources */,
+				84E0884B260504E400EDAB62 /* AnimateService.swift in Sources */,
 				84CDB80725FCDCC200F9A76D /* ActionButton.swift in Sources */,
 				84E088442604EB1100EDAB62 /* FirebaseService.swift in Sources */,
+				84E0884F26050C7100EDAB62 /* DataFetcher.swift in Sources */,
 				84CDB81F25FD1C4300F9A76D /* ContainerViewController.swift in Sources */,
+				84E0885326050D3E00EDAB62 /* DataUploader.swift in Sources */,
 				84CDB82325FD280400F9A76D /* ProfileHeader.swift in Sources */,
 				84CDB81B25FCFC9A00F9A76D /* SettingsViewController.swift in Sources */,
 				84CDB7F925FCD9EB00F9A76D /* LoginViewController.swift in Sources */,
@@ -388,6 +403,7 @@
 				84CDB80F25FCE69200F9A76D /* User.swift in Sources */,
 				84614C852603BB370033D125 /* MessageInputView.swift in Sources */,
 				849325952602C35800A8029C /* SettingsView.swift in Sources */,
+				84E08858260511C100EDAB62 /* AuthService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -57,7 +57,7 @@ class SettingsViewController: UIViewController {
     
     @objc func Keyboard(notification: Notification) {
         if notification.name == UIResponder.keyboardWillHideNotification {
-        view.layoutIfNeeded()
+            view.layoutIfNeeded()
         }
     }
     
@@ -106,65 +106,85 @@ class SettingsViewController: UIViewController {
     // MARK: - API
     
     func handleUpdateProfile() {
-
         self.present(alert, animated: true, completion: nil)
         view.endEditing(true)
         
+        let group = DispatchGroup()
         if imageSelected {
-            updateProfileImage()
+            group.enter()
+            updateProfileImage(completion: {
+                do { group.leave() }
+            })
         }
-        
         if usernameChanged {
-            updateUserFullname()
+            group.enter()
+            updateUserFullname(completion: {
+                do { group.leave() }
+            })
         }
+        group.notify(queue: .main) {
+            self.userProfileEdited()
+        }
+
         
-        userProfileEdited()
+        //        if imageSelected {
+        //            updateProfileImage()
+        //        }
+        //
+        //        if usernameChanged {
+        //            updateUserFullname()
+        //        }
+        //
+        //        userProfileEdited()
     }
     
     
-    func updateUserFullname() {
-    
+    func updateUserFullname(completion: @escaping() -> Void) {
+        print("updateUserFullname start")
+        
         let fullname = updatedUsername ?? self.user.fullname ?? ""
         
         let values = ["fullname": fullname] as [String : Any]
         
-        REF_USERS.child(user.uid).updateChildValues(values, withCompletionBlock: { (error, ref) in
+        DB.REF_USERS.child(user.uid).updateChildValues(values, withCompletionBlock: { (error, ref) in
             if let error = error {
                 print("DEBUG: Failed to update user fullname with error \(error.localizedDescription)")
                 return
             }
             
             self.user.fullname = fullname
+            print("updateUserFullname end")
+            completion()
         })
         
     }
     
-    func updateProfileImage() {
-        
+    func updateProfileImage(completion: @escaping() -> Void) {
+        print("updateProfileImage start")
         let profileImg = selectedImage
         guard let uploadData = profileImg.jpegData(compressionQuality: 0.3) else { return }
-
+        
         let filename = NSUUID().uuidString
         
         if self.user.profileImageUrl == "" {
-            uploadProfileImage(withData: uploadData, withFilename: filename)
+            uploadProfileImage(withData: uploadData, withFilename: filename, completion: completion)
         } else {
-            deleteImageFromStorage()
-            uploadProfileImage(withData: uploadData, withFilename: filename)
+            deleteImageFromStorage(completion: {
+                self.uploadProfileImage(withData: uploadData, withFilename: filename, completion: completion)
+            })
         }
-        
     }
     
-    func uploadProfileImage(withData uploadData: Data, withFilename filename: String) {
+    func uploadProfileImage(withData uploadData: Data, withFilename filename: String, completion: @escaping() -> Void) {
         
         let storageRef = Storage.storage().reference().child("profile_images").child(filename)
         storageRef.putData(uploadData, metadata: nil, completion: { (metadata, error) in
-
+            
             if let error = error {
                 print("DEBUG: Failed to upload image to Firebase Storage with error", error.localizedDescription)
                 return
             }
-
+            
             storageRef.downloadURL(completion: { (downloadURL, error) in
                 guard let profileImageUrl = downloadURL?.absoluteString else {
                     print("DEBUG: Profile image url is nil")
@@ -177,12 +197,14 @@ class SettingsViewController: UIViewController {
                         print("DEBUG: Failed to update user profile URL in Firebase", error.localizedDescription)
                         return
                     }
+                    print("updateProfileImage end")
+                    completion()
                 }
             })
         })
     }
     
-    func deleteImageFromStorage() {
+    func deleteImageFromStorage(completion: @escaping() -> Void) {
         guard let storagePath = user.profileImageUrl else { return }
         let desertRef = Storage.storage().reference(forURL: storagePath)
         desertRef.delete { error in
@@ -190,15 +212,23 @@ class SettingsViewController: UIViewController {
                 print("DEBUG: Failed to delete image", error.localizedDescription)
                 return
             }
+            completion()
         }
     }
     
     func userProfileEdited() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-            self.alert.dismiss(animated: true, completion: {
-                self.delegate?.userProfileEdited()
-            })
-        }
+        print("userProfileEdited start")
+        
+        self.alert.dismiss(animated: true, completion: {
+            //            self.delegate?.userProfileEdited()
+            print("userProfileEdited end")
+        })
+        
+        //        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+        //            self.alert.dismiss(animated: true, completion: {
+        //                self.delegate?.userProfileEdited()
+        //            })
+        //        }
     }
 }
 

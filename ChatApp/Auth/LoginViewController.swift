@@ -17,9 +17,11 @@ class LoginViewController: UIViewController {
     
     // MARK: - Properties
     
-    let signUpVC = SignUpViewController()
     weak var delegate: LoginViewControllerDelegate?
+    
+    private let signUpVC = SignUpViewController()
     private lazy var userAuthView = UserAuthWithEmailView()
+    private let authServise = AuthService()
 
     // MARK: - Lifecycle
     
@@ -90,13 +92,13 @@ class LoginViewController: UIViewController {
     // MARK: - Protocol Functions
     
     func handleLogin(email: String, password: String) {
-        Auth.auth().signIn(withEmail: email, password: password) { (result, error) in
-            if let error = error {
-                print("DEBUG: Failed to log user in with error \(error.localizedDescription)")
-                return
+        authServise.handleLogin(email: email, password: password) { (wasAuthSuccessful) in
+            if wasAuthSuccessful == true {
+                self.delegate?.loginWithEmail(self)
+                self.dismiss(animated: true, completion: nil)
+            } else {
+                print(wasAuthSuccessful)
             }
-            self.delegate?.loginWithEmail(self)
-            self.dismiss(animated: true, completion: nil)
         }
     }
 }
