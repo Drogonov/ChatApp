@@ -25,7 +25,7 @@ class ChatCollectionView: UICollectionView, UICollectionViewDelegate, UICollecti
         delegate = self
         dataSource = self
         
-        backgroundColor = UIColor.white
+        backgroundColor = .systemBackground
         
         showsHorizontalScrollIndicator = false
         showsVerticalScrollIndicator = false
@@ -51,14 +51,14 @@ class ChatCollectionView: UICollectionView, UICollectionViewDelegate, UICollecti
         if message.fromId == currentUID {
             cell.bubbleViewRightAnchor?.isActive = true
             cell.bubbleViewLeftAnchor?.isActive = false
-            cell.bubbleView.backgroundColor = UIColor.rgb(red: 0, green: 137, blue: 249)
+            cell.bubbleView.backgroundColor = .systemRed
             cell.textView.textColor = .white
             cell.profileImageView.isHidden = true
         } else {
             cell.bubbleViewRightAnchor?.isActive = false
             cell.bubbleViewLeftAnchor?.isActive = true
-            cell.bubbleView.backgroundColor = UIColor.rgb(red: 240, green: 240, blue: 240)
-            cell.textView.textColor = .black
+            cell.bubbleView.backgroundColor = .secondarySystemBackground
+            cell.textView.textColor = .label
             cell.profileImageView.isHidden = false
         }
     }

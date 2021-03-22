@@ -61,9 +61,9 @@ class FirebaseService: FirebaseServiceDelegate {
         let connectedRef = Database.database().reference(withPath: ".info/connected")
         connectedRef.observe(.value, with: { (snapshot) in
             if snapshot.value as? Bool ?? false {
-                completion(true)
-            } else {
                 completion(false)
+            } else {
+                completion(true)
             }
         })
     }

@@ -28,6 +28,7 @@ class MessageInputView: UIView {
         let button = UIButton(type: .system)
         button.setTitle("Send", for: .normal)
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
+        button.titleLabel?.tintColor = .systemRed
         button.addTarget(self, action: #selector(handleUploadMessage), for: .touchUpInside)
         return button
     }()
