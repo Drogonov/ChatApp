@@ -22,7 +22,7 @@ class LoginViewController: UIViewController {
     private let signUpVC = SignUpViewController()
     private lazy var userAuthView = UserAuthWithEmailView()
     private let authServise = AuthService()
-
+    
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
@@ -95,20 +95,17 @@ class LoginViewController: UIViewController {
     }
     
     // MARK: - API
-        
+    
     func handleLogin(email: String, password: String) {
-        connectionCheck { (doesUserConnected) in
-            if doesUserConnected == true {
-                self.authServise.handleLogin(email: email, password: password) { (wasAuthSuccessful) in
-                    if wasAuthSuccessful == true {
-                        self.delegate?.loginWithEmail(self)
-                        self.dismiss(animated: true, completion: nil)
-                    } else {
-                        self.showNotification(title: "Smth goes wwrong with Loggin in, pls try again", defaultAction: true, defaultActionText: "Ok") {}
-                    }
-                }
+        authServise.handleLogin(email: email, password: password) { (wasAuthSuccessful) in
+            if wasAuthSuccessful == true {
+                self.delegate?.loginWithEmail(self)
+                self.dismiss(animated: true, completion: nil)
+            } else {
+                self.showNotification(title: "Smth goes wrong with Loggin in, pls try again", defaultAction: true, defaultActionText: "Ok") {}
             }
         }
+        
     }
 }
 

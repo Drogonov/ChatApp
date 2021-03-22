@@ -87,17 +87,14 @@ class SignUpViewController: UIViewController {
     // MARK: - API
     
     func handleSignUp(email: String, password: String) {
-        connectionCheck { (doesUserConnected) in
-            if doesUserConnected == true {
-                self.authServise.handleSignUp(email: email, password: password) { (wasSignUpSuccessful) in
-                    if wasSignUpSuccessful == true {
-                        self.delegate?.signUpWithEmail(self)
-                    } else {
-                        self.showNotification(title: "Smth goes wwrong with Signing up, pls try again", defaultAction: true, defaultActionText: "Ok") {}
-                    }
-                }
+        self.authServise.handleSignUp(email: email, password: password) { (wasSignUpSuccessful) in
+            if wasSignUpSuccessful == true {
+                self.delegate?.signUpWithEmail(self)
+            } else {
+                self.showNotification(title: "Smth goes wrong with Signing up, pls try again", defaultAction: true, defaultActionText: "Ok") {}
             }
         }
+        
     }
 }
 
