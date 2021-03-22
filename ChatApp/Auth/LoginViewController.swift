@@ -28,7 +28,6 @@ class LoginViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
-        connectionCheck()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -98,12 +97,16 @@ class LoginViewController: UIViewController {
     // MARK: - API
         
     func handleLogin(email: String, password: String) {
-        authServise.handleLogin(email: email, password: password) { (wasAuthSuccessful) in
-            if wasAuthSuccessful == true {
-                self.delegate?.loginWithEmail(self)
-                self.dismiss(animated: true, completion: nil)
-            } else {
-                self.showNotification(title: "Smth goes wwrong with Loggin in, pls try again", defaultAction: true, defaultActionText: "Ok") {}
+        connectionCheck { (doesUserConnected) in
+            if doesUserConnected == true {
+                self.authServise.handleLogin(email: email, password: password) { (wasAuthSuccessful) in
+                    if wasAuthSuccessful == true {
+                        self.delegate?.loginWithEmail(self)
+                        self.dismiss(animated: true, completion: nil)
+                    } else {
+                        self.showNotification(title: "Smth goes wwrong with Loggin in, pls try again", defaultAction: true, defaultActionText: "Ok") {}
+                    }
+                }
             }
         }
     }

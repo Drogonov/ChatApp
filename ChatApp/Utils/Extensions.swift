@@ -165,11 +165,14 @@ extension UIViewController {
         self.present(alert, animated: true, completion: nil)
     }
     
-    func connectionCheck() {
+    func connectionCheck(completion: @escaping(Bool) -> Void) {
         let firebaseService = FirebaseService()
         firebaseService.connectionCheck { (doesUserConnected) in
             if doesUserConnected == false {
                 self.showNotification(title: "Pls turn on the internet", defaultAction: true, defaultActionText: "Ok") {}
+                completion(doesUserConnected)
+            } else {
+                completion(doesUserConnected)
             }
         }
     }

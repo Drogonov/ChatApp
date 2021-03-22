@@ -26,7 +26,6 @@ class SignUpViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
-        connectionCheck()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -88,11 +87,15 @@ class SignUpViewController: UIViewController {
     // MARK: - API
     
     func handleSignUp(email: String, password: String) {
-        authServise.handleSignUp(email: email, password: password) { (wasSignUpSuccessful) in
-            if wasSignUpSuccessful == true {
-                self.delegate?.signUpWithEmail(self)
-            } else {
-                self.showNotification(title: "Smth goes wwrong with Signing up, pls try again", defaultAction: true, defaultActionText: "Ok") {}
+        connectionCheck { (doesUserConnected) in
+            if doesUserConnected == true {
+                self.authServise.handleSignUp(email: email, password: password) { (wasSignUpSuccessful) in
+                    if wasSignUpSuccessful == true {
+                        self.delegate?.signUpWithEmail(self)
+                    } else {
+                        self.showNotification(title: "Smth goes wwrong with Signing up, pls try again", defaultAction: true, defaultActionText: "Ok") {}
+                    }
+                }
             }
         }
     }
