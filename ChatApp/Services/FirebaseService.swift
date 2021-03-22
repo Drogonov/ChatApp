@@ -60,10 +60,11 @@ class FirebaseService: FirebaseServiceDelegate {
     func connectionCheck(completion: @escaping(Bool) -> Void) {
         let connectedRef = Database.database().reference(withPath: ".info/connected")
         connectedRef.observe(.value, with: { (snapshot) in
+            print(snapshot)
             if snapshot.value as? Bool ?? false {
-                completion(false)
-            } else {
                 completion(true)
+            } else {
+                completion(false)
             }
         })
     }
